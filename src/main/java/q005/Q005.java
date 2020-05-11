@@ -1,34 +1,115 @@
 package q005;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 /**
- * Q005 ãƒ‡ãƒ¼ã‚¿ã‚¯ãƒ©ã‚¹ã¨æ§˜ã€…ãªé›†è¨ˆ
+ * Q005 ƒf[ƒ^ƒNƒ‰ƒX‚Æ—lX‚ÈWŒv
  *
- * ä»¥ä¸‹ã®ãƒ•ã‚¡ã‚¤ãƒ«ã‚’èª­ã¿è¾¼ã‚“ã§ã€WorkDataã‚¯ãƒ©ã‚¹ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã‚’ä½œæˆã—ã¦ãã ã•ã„ã€‚
+ * ˆÈ‰º‚Ìƒtƒ@ƒCƒ‹‚ğ“Ç‚İ‚ñ‚ÅAWorkDataƒNƒ‰ƒX‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚ğì¬‚µ‚Ä‚­‚¾‚³‚¢B
  * resources/q005/data.txt
- * (å…ˆé ­è¡Œã¯ã‚¿ã‚¤ãƒˆãƒ«ãªã®ã§èª­ã¿å–ã‚Šã‚’ã‚¹ã‚­ãƒƒãƒ—ã™ã‚‹)
+ * (æ“ªs‚Íƒ^ƒCƒgƒ‹‚È‚Ì‚Å“Ç‚İæ‚è‚ğƒXƒLƒbƒv‚·‚é)
  *
- * èª­ã¿è¾¼ã‚“ã ãƒ‡ãƒ¼ã‚¿ã‚’ä»¥ä¸‹ã§é›†è¨ˆã—ã¦å‡ºåŠ›ã—ã¦ãã ã•ã„ã€‚
- * (1) å½¹è·åˆ¥ã®åˆè¨ˆä½œæ¥­æ™‚é–“
- * (2) Pã‚³ãƒ¼ãƒ‰åˆ¥ã®åˆè¨ˆä½œæ¥­æ™‚é–“
- * (3) ç¤¾å“¡ç•ªå·åˆ¥ã®åˆè¨ˆä½œæ¥­æ™‚é–“
- * ä¸Šè¨˜é …ç›®å†…ã§ã®å‡ºåŠ›é †ã¯å•ã„ã¾ã›ã‚“ã€‚
+ * “Ç‚İ‚ñ‚¾ƒf[ƒ^‚ğˆÈ‰º‚ÅWŒv‚µ‚Äo—Í‚µ‚Ä‚­‚¾‚³‚¢B
+ * (1) –ğE•Ê‚Ì‡Œvì‹ÆŠÔ
+ * (2) PƒR[ƒh•Ê‚Ì‡Œvì‹ÆŠÔ
+ * (3) Ğˆõ”Ô†•Ê‚Ì‡Œvì‹ÆŠÔ
+ * ã‹L€–Ú“à‚Å‚Ìo—Í‡‚Í–â‚¢‚Ü‚¹‚ñB
  *
- * ä½œæ¥­æ™‚é–“ã¯ "xxæ™‚é–“xxåˆ†" ã®å½¢å¼ã«ã—ã¦ãã ã•ã„ã€‚
- * ã¾ãŸã€WorkDataã‚¯ãƒ©ã‚¹ã¯è‡ªç”±ã«ä¿®æ­£ã—ã¦ãã ã•ã„ã€‚
+ * ì‹ÆŠÔ‚Í "xxŠÔxx•ª" ‚ÌŒ`®‚É‚µ‚Ä‚­‚¾‚³‚¢B
+ * ‚Ü‚½AWorkDataƒNƒ‰ƒX‚Í©—R‚ÉC³‚µ‚Ä‚­‚¾‚³‚¢B
  *
-[å‡ºåŠ›ã‚¤ãƒ¡ãƒ¼ã‚¸]
-éƒ¨é•·: xxæ™‚é–“xxåˆ†
-èª²é•·: xxæ™‚é–“xxåˆ†
-ä¸€èˆ¬: xxæ™‚é–“xxåˆ†
-Z-7-31100: xxæ™‚é–“xxåˆ†
-I-7-31100: xxæ™‚é–“xxåˆ†
-T-7-30002: xxæ™‚é–“xxåˆ†
-ï¼ˆçœç•¥ï¼‰
-194033: xxæ™‚é–“xxåˆ†
-195052: xxæ™‚é–“xxåˆ†
-195066: xxæ™‚é–“xxåˆ†
-ï¼ˆçœç•¥ï¼‰
+[o—ÍƒCƒ[ƒW]
+•”’·: xxŠÔxx•ª
+‰Û’·: xxŠÔxx•ª
+ˆê”Ê: xxŠÔxx•ª
+Z-7-31100: xxŠÔxx•ª
+I-7-31100: xxŠÔxx•ª
+T-7-30002: xxŠÔxx•ª
+iÈ—ªj
+194033: xxŠÔxx•ª
+195052: xxŠÔxx•ª
+195066: xxŠÔxx•ª
+iÈ—ªj
  */
 public class Q005 {
+    /**
+     * ƒf[ƒ^ƒtƒ@ƒCƒ‹‚ğŠJ‚­
+     * resources/q003/data.txt
+     */
+    private static InputStream openDataFile() {
+        return Q005.class.getResourceAsStream("data.txt");
+    }
+
+    public static void main(String[] args) {
+
+        // data“o˜^
+        final List<WorkData> WorkDataList;
+        try {
+            WorkDataList = regData();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        // WŒv
+        // (1) –ğE•Ê‚Ì‡Œvì‹ÆŠÔ
+        calcWorkTimePosition(WorkDataList);
+        // (2) PƒR[ƒh•Ê‚Ì‡Œvì‹ÆŠÔ
+        calcWorkTimePCode(WorkDataList);
+        // (3) Ğˆõ”Ô†•Ê‚Ì‡Œvì‹ÆŠÔ
+        calcWorkTimeNumber(WorkDataList);
+    }
+
+    private static void calcWorkTimePosition(List<WorkData> workDataList) {
+        Map<String, Integer> calcWorkTime = workDataList.stream()
+                .collect(Collectors.groupingBy(
+                        WorkData::getPosition,
+                        Collectors.summingInt(WorkData::getWorkTime))
+                );
+        display(calcWorkTime);
+    }
+
+    private static void calcWorkTimePCode(List<WorkData> workDataList) {
+        Map<String, Integer> calcWorkTime = workDataList.stream()
+                .collect(Collectors.groupingBy(
+                        WorkData::getpCode,
+                        Collectors.summingInt(WorkData::getWorkTime))
+                );
+        display(calcWorkTime);
+    }
+    private static void calcWorkTimeNumber(List<WorkData> workDataList) {
+        Map<String, Integer> calcWorkTime = workDataList.stream()
+                .collect(Collectors.groupingBy(
+                        WorkData::getNumber,
+                        Collectors.summingInt(WorkData::getWorkTime))
+                );
+        display(calcWorkTime);
+    }
+
+    private static void display(Map<String, Integer> calcWorkTime) {
+        calcWorkTime.forEach((key, value) -> System.out.println(
+                String.format("%s: %dŠÔ%d•ª", key, value / 60, value % 60)));
+    }
+
+    private static List<WorkData> regData() throws IOException {
+
+        List<WorkData> workDataList = new ArrayList<>();
+        BufferedReader br = new BufferedReader(new InputStreamReader(openDataFile()));
+        // 1s”ò‚Î‚·
+        br.readLine();
+        String line;
+        while ((line = br.readLine()) != null) {
+            WorkData workData = new WorkData(line.split(","));
+            workDataList.add(workData);
+        }
+        return workDataList;
+    }
 }
-// å®Œæˆã¾ã§ã®æ™‚é–“: xxæ™‚é–“ xxåˆ†
+// Š®¬‚Ü‚Å‚ÌŠÔ: 02ŠÔ 00•ª

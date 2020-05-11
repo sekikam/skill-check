@@ -1,5 +1,7 @@
 package q004;
 
+import java.util.stream.IntStream;
+
 /**
  * Q004 ソートアルゴリズム
  *
@@ -15,5 +17,16 @@ package q004;
  * - ListManagerクラスの比較 compare と入れ替え exchange を使って実現してください
  */
 public class Q004 {
+    public static void main(String[] args) {
+        ListManager data = new ListManager();
+
+        int cnt = data.size();
+        for (int index1 = 0; index1 < cnt; index1++) {
+            for (int index2 = index1 + 1; index2 < cnt; index2++) {
+                if (data.compare(index1, index2) == 1) data.exchange(index1, index2);
+            }
+        }
+        data.checkResult();
+    }
 }
-// 完成までの時間: xx時間 xx分
+// 完成までの時間: 00時間 30分

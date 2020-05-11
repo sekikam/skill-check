@@ -3,8 +3,8 @@ package q004;
 import java.util.Random;
 
 /**
- * ãƒªã‚¹ãƒˆç®¡ç†ã‚¯ãƒ©ã‚¹
- * ã“ã®ã‚¯ãƒ©ã‚¹ã‚’å¤‰æ›´ã—ã¦ã¯ã„ã‘ã¾ã›ã‚“
+ * ƒŠƒXƒgŠÇ—ƒNƒ‰ƒX
+ * ‚±‚ÌƒNƒ‰ƒX‚ğ•ÏX‚µ‚Ä‚Í‚¢‚¯‚Ü‚¹‚ñ
  */
 public class ListManager {
     private int[] dataList;
@@ -12,7 +12,7 @@ public class ListManager {
     private int exchangeCount;
 
     public ListManager() {
-        // ãƒ‡ãƒ¼ã‚¿ã‚’ãƒ©ãƒ³ãƒ€ãƒ ã«ä½œæˆã™ã‚‹
+        // ƒf[ƒ^‚ğƒ‰ƒ“ƒ_ƒ€‚Éì¬‚·‚é
         Random random = new Random();
         dataList = new int[100];
         for (int i = 0; i < dataList.length; i++) {
@@ -21,11 +21,11 @@ public class ListManager {
     }
 
     /**
-     * 2ã¤ã®ãƒ‡ãƒ¼ã‚¿ã‚’æ¯”è¼ƒã™ã‚‹
+     * 2‚Â‚Ìƒf[ƒ^‚ğ”äŠr‚·‚é
      *
      * @param index1
      * @param index2
-     * @return -1:index1ã®ãƒ‡ãƒ¼ã‚¿ãŒå°ã•ã„, 1:index2ã®ãƒ‡ãƒ¼ã‚¿ãŒå°ã•ã„, 0:åŒã˜ãƒ‡ãƒ¼ã‚¿
+     * @return -1:index1‚Ìƒf[ƒ^‚ª¬‚³‚¢, 1:index2‚Ìƒf[ƒ^‚ª¬‚³‚¢, 0:“¯‚¶ƒf[ƒ^
      */
     public int compare(int index1, int index2) {
         compareCount++;
@@ -33,7 +33,7 @@ public class ListManager {
     }
 
     /**
-     * 2ã¤ã®ãƒ‡ãƒ¼ã‚¿ã‚’å…¥ã‚Œæ›¿ãˆã‚‹
+     * 2‚Â‚Ìƒf[ƒ^‚ğ“ü‚ê‘Ö‚¦‚é
      *
      * @param index1
      * @param index2
@@ -46,21 +46,21 @@ public class ListManager {
     }
 
     /**
-     * ã‚½ãƒ¼ãƒˆãŒæ­£ã—ãè¡Œã‚ã‚ŒãŸã‹ã‚’ãƒã‚§ãƒƒã‚¯ã™ã‚‹
+     * ƒ\[ƒg‚ª³‚µ‚­s‚í‚ê‚½‚©‚ğƒ`ƒFƒbƒN‚·‚é
      */
     public void checkResult() {
         int data = dataList[0];
         for (int i = 1; i < dataList.length; i++) {
             if (data > dataList[i]) {
-                throw new RuntimeException("ã‚½ãƒ¼ãƒˆã•ã‚Œã¦ã„ãªã„: [" + (i - 1) + "]=" + data + ", [" + i + "]=" + dataList[i]);
+                throw new RuntimeException("ƒ\[ƒg‚³‚ê‚Ä‚¢‚È‚¢: [" + (i - 1) + "]=" + data + ", [" + i + "]=" + dataList[i]);
             }
             data = dataList[i];
         }
-        System.out.println("ã‚½ãƒ¼ãƒˆOK: æ¯”è¼ƒ=" + compareCount + ", å…¥ã‚Œæ›¿ãˆ=" + exchangeCount);
+        System.out.println("ƒ\[ƒgOK: ”äŠr=" + compareCount + ", “ü‚ê‘Ö‚¦=" + exchangeCount);
     }
 
     /**
-     * ãƒ‡ãƒ¼ã‚¿ã®ã‚µã‚¤ã‚ºã‚’å–å¾—ã™ã‚‹
+     * ƒf[ƒ^‚ÌƒTƒCƒY‚ğæ“¾‚·‚é
      *
      * @return
      */

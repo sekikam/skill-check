@@ -1,37 +1,75 @@
 package q003;
 
+import java.io.BufferedReader;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
- * Q003 é›†è¨ˆã¨ä¸¦ã¹æ›¿ãˆ
+ * Q003 WŒv‚Æ•À‚×‘Ö‚¦
  *
- * ä»¥ä¸‹ã®ãƒ‡ãƒ¼ã‚¿ãƒ•ã‚¡ã‚¤ãƒ«ã‚’èª­ã¿è¾¼ã‚“ã§ã€å‡ºç¾ã™ã‚‹å˜èªã”ã¨ã«æ•°ã‚’ã‚«ã‚¦ãƒ³ãƒˆã—ã€ã‚¢ãƒ«ãƒ•ã‚¡ãƒ™ãƒƒãƒˆè¾æ›¸é †ã«ä¸¦ã³å¤‰ãˆã¦å‡ºåŠ›ã—ã¦ãã ã•ã„ã€‚
+ * ˆÈ‰º‚Ìƒf[ƒ^ƒtƒ@ƒCƒ‹‚ğ“Ç‚İ‚ñ‚ÅAoŒ»‚·‚é’PŒê‚²‚Æ‚É”‚ğƒJƒEƒ“ƒg‚µAƒAƒ‹ƒtƒ@ƒxƒbƒg«‘‡‚É•À‚Ñ•Ï‚¦‚Äo—Í‚µ‚Ä‚­‚¾‚³‚¢B
  * resources/q003/data.txt
- * å˜èªã®æ¡ä»¶ã¯ä»¥ä¸‹ã¨ãªã‚Šã¾ã™
- * - "I"ä»¥å¤–ã¯å…¨ã¦å°æ–‡å­—ã§æ‰±ã†ï¼ˆ"My"ã¨"my"ã¯åŒã˜ã"my"ã¨ã—ã¦æ‰±ã†ï¼‰
- * - å˜æ•°å½¢ã¨è¤‡æ•°å½¢ã®ã‚ˆã†ã«å°‘ã—ã§ã‚‚æ–‡å­—åˆ—ãŒç•°ã‚Œã°åˆ¥å˜èªã¨ã—ã¦æ‰±ã†ï¼ˆ"dream"ã¨"dreams"ã¯åˆ¥å˜èªï¼‰
- * - ã‚¢ãƒã‚¹ãƒˆãƒ­ãƒ•ã‚£ãƒ¼ã‚„ãƒã‚¤ãƒ•ãƒ³ä»˜ã®å˜èªã¯1å˜èªã¨ã—ã¦æ‰±ã†ï¼ˆ"isn't"ã‚„"dead-end"ï¼‰
+ * ’PŒê‚ÌğŒ‚ÍˆÈ‰º‚Æ‚È‚è‚Ü‚·
+ * - "I"ˆÈŠO‚Í‘S‚Ä¬•¶š‚Åˆµ‚¤i"My"‚Æ"my"‚Í“¯‚¶‚­"my"‚Æ‚µ‚Äˆµ‚¤j
+ * - ’P”Œ`‚Æ•¡”Œ`‚Ì‚æ‚¤‚É­‚µ‚Å‚à•¶š—ñ‚ªˆÙ‚ê‚Î•Ê’PŒê‚Æ‚µ‚Äˆµ‚¤i"dream"‚Æ"dreams"‚Í•Ê’PŒêj
+ * - ƒAƒ|ƒXƒgƒƒtƒB[‚âƒnƒCƒtƒ“•t‚Ì’PŒê‚Í1’PŒê‚Æ‚µ‚Äˆµ‚¤i"isn't"‚â"dead-end"j
  *
- * å‡ºåŠ›å½¢å¼:å˜èª=æ•°
+ * o—ÍŒ`®:’PŒê=”
  *
-[å‡ºåŠ›ã‚¤ãƒ¡ãƒ¼ã‚¸]
-ï¼ˆçœç•¥ï¼‰
+[o—ÍƒCƒ[ƒW]
+iÈ—ªj
 highest=1
 I=3
 if=2
 ignorance=1
-ï¼ˆçœç•¥ï¼‰
+iÈ—ªj
 
- * å‚è€ƒ
+ * Ql
  * http://eikaiwa.dmm.com/blog/4690/
  */
 public class Q003 {
     /**
-     * ãƒ‡ãƒ¼ã‚¿ãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‹ã
+     * ƒf[ƒ^ƒtƒ@ƒCƒ‹‚ğŠJ‚­
      * resources/q003/data.txt
      */
     private static InputStream openDataFile() {
         return Q003.class.getResourceAsStream("data.txt");
     }
+
+    public static void main(String[] args) {
+        // ƒf[ƒ^ƒtƒ@ƒCƒ‹“Ç‚İ‚İ
+        Map<String, Integer> data = new TreeMap<>();
+        try {
+            BufferedReader br = new BufferedReader(new InputStreamReader(openDataFile()));
+            String line;
+            while((line = br.readLine()) != null) {
+                String lowerStr;
+                int cnt;
+                // •ªŠ„•ªƒ‹[ƒv
+                // ‹ó”’AƒsƒŠƒIƒhAƒJƒ“ƒ}AƒZƒ~ƒRƒƒ“‚Íœ‹
+                for (String splitLine : line.split("[ .,;]")) {
+                    if (splitLine.isEmpty()) continue;
+                    // ˆê’U‘S‚Ä¬•¶š‚É•ÏŠ·‚µ‚Ä“o˜^
+                    lowerStr = splitLine.toLowerCase();
+                    if (data.containsKey(lowerStr)) {
+                        cnt = data.get(lowerStr);
+                        data.replace(lowerStr, ++cnt);
+                    } else {
+                        data.put(lowerStr, 1);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        String displayKey;
+        for (String key : data.keySet()) {
+            displayKey = "i".equals(key) ? "I" : key;
+            System.out.println(displayKey + "=" + data.get(key));
+        }
+    }
 }
-// å®Œæˆã¾ã§ã®æ™‚é–“: xxæ™‚é–“ xxåˆ†
+// Š®¬‚Ü‚Å‚ÌŠÔ: 01ŠÔ 00•ª

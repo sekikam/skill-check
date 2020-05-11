@@ -1,5 +1,12 @@
 package q007;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.List;
+import java.util.Stack;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
+
 /**
  * q007 最短経路探索
  *
@@ -26,5 +33,116 @@ XXXXXXXXX
 14
  */
 public class Q007 {
+
+    static String[][] mazeInfo;
+    static Stack roadStack;
+
+    public static void main(String[] args) {
+
+        InputStreamReader ir = new InputStreamReader(new MazeInputStream());
+        BufferedReader br = new BufferedReader(ir);
+        final List<String[]> allList = br.lines()
+                .map(line -> line.split(""))
+                .collect(Collectors.toList());
+
+        mazeInfo = new String[allList.size()][allList.get(0).length];
+        AtomicInteger ai = new AtomicInteger();
+        allList.forEach(s -> mazeInfo[ai.getAndIncrement()] = s);
+
+        roadStack = new Stack<>();
+        RoadInfo start = getStart();
+        if (start == null) {
+            System.out.println("Sなし");
+            return;
+        }
+        roadStack.push(start);
+        mazeDisplay();
+        System.out.println("[答え] : " + execMaze());
+    }
+
+    private static RoadInfo getStart() {
+
+        // start地点を探す
+        RoadInfo start = null;
+        for (int i = 0; i < mazeInfo.length; i++) {
+            for (int j = 0; j < mazeInfo[0].length; j++) {
+                if ("S".equals(mazeInfo[i][j])) {
+                    return new RoadInfo(i, j, mazeInfo[i][j]);
+                }
+            }
+        }
+        return null;
+    }
+
+    private static int execMaze() {
+
+        while(true){
+            searchRoad((RoadInfo) roadStack.peek());
+
+            RoadInfo now = (RoadInfo) roadStack.peek();
+            switch(now.getValue()) {
+                case "S" :
+                    // 最初まで戻ってきた=ゴールまで辿り着くルートが無かった
+                    return -1;
+                case "E" :
+                    mazeDisplay();
+                    return roadStack.size();
+            }
+        }
+    }
+
+    /*
+     *通れる道があるかどうか
+     * あれば
+     *  pushする
+     *  通過済フラグをtrue
+     *  valueに”●”を設定
+     * なければpopする
+     */
+    private static void searchRoad(RoadInfo target) {
+
+        // 左、上、右、下の順序で道を検索
+        int[] nextXs = {target.getX() - 1, target.getX()    , target.getX() + 1, target.getX()    };
+        int[] nextYs = {target.getY()    , target.getY() - 1, target.getY()    , target.getY() + 1};
+
+        for ( int cnt = 0; cnt < nextXs.length; cnt++ ){
+            if (checkTargetValue(nextXs[cnt], nextYs[cnt])) {
+                roadStack.push(new RoadInfo(nextXs[cnt], nextYs[cnt], mazeInfo[nextXs[cnt]][nextYs[cnt]]));
+                if (!"S".equals(mazeInfo[target.getX()][target.getY()])){
+                    mazeInfo[target.getX()][target.getY()] = "@";
+                }
+                mazeDisplay();
+                return;
+            }
+        }
+        if (!"S".equals(mazeInfo[target.getX()][target.getY()])){
+            mazeInfo[target.getX()][target.getY()] = " ";
+        }
+        roadStack.pop();
+    }
+
+    private static boolean checkTargetValue(int x, int y) {
+        String target;
+        try {
+            target =  mazeInfo[x][y];
+        } catch(IndexOutOfBoundsException e) {
+            return false;
+        }
+        return " ".equals(target);
+    }
+    private static void mazeDisplay(){
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        for (String[] i : mazeInfo) {
+            for (String j : i) {
+                System.out.print(j);
+            }
+            System.out.println();
+        }
+    }
+
 }
 // 完成までの時間: xx時間 xx分

@@ -1,49 +1,93 @@
 package q006;
 
-import q006.value.DecimalValue;
-import q006.value.IValue;
-import q006.value.PlusValue;
+import q006.value.*;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
+import java.util.Stack;
 
 /**
- * Q006 ç©ºæ°—ã‚’èª­ã‚“ã§æ”¹ä¿®
+ * Q006 ‹ó‹C‚ğ“Ç‚ñ‚Å‰üC
  *
- * æ¨™æº–å…¥åŠ›ã‹ã‚‰ã€Œé€†ãƒãƒ¼ãƒ©ãƒ³ãƒ‰è¨˜æ³•ã€ã§è¨˜è¼‰ã•ã‚ŒãŸ1è¡Œã®å…¥åŠ›ã‚’å—ã‘å–ã‚Šã€ãã®è¨ˆç®—çµæœã‚’å‡ºåŠ›ã™ã‚‹å‡¦ç†ã‚’å®Ÿè£…ã—ã¦ãã ã•ã„ã€‚
- * å®Ÿè£…ã™ã‚‹ã®ã¯å››å‰‡æ¼”ç®—ï¼ˆ+ - * /ï¼‰ã§ã™ã€‚
+ * •W€“ü—Í‚©‚çu‹tƒ|[ƒ‰ƒ“ƒh‹L–@v‚Å‹LÚ‚³‚ê‚½1s‚Ì“ü—Í‚ğó‚¯æ‚èA‚»‚ÌŒvZŒ‹‰Ê‚ğo—Í‚·‚éˆ—‚ğÀ‘•‚µ‚Ä‚­‚¾‚³‚¢B
+ * À‘•‚·‚é‚Ì‚Íl‘¥‰‰Zi+ - * /j‚Å‚·B
  *
  * https://ja.wikipedia.org/wiki/%E9%80%86%E3%83%9D%E3%83%BC%E3%83%A9%E3%83%B3%E3%83%89%E8%A8%98%E6%B3%95
  *
- * ãŸã ã—ã€ç¾çŠ¶ã¯ä»¥ä¸‹ã®å®Ÿè£…ãŒçµ‚ã‚ã£ã¦ã„ã¾ã™ã€‚
- * - é€†ãƒãƒ¼ãƒ©ãƒ³ãƒ‰è¨˜æ³•ã‚’åˆ†è§£ã—ã¦ã€è¨ˆç®—ã—ã‚„ã™ã„å€¤ãƒªã‚¹ãƒˆã«å¤‰æ›ã™ã‚‹å‡¦ç†ã®ä¸€éƒ¨ï¼ˆQ006.parseLineï¼‰
- * - è¨ˆç®—ã—ã‚„ã™ã„å€¤ã¨ã—ã¦ç®¡ç†ã™ã‚‹ãŸã‚ã®ã‚¯ãƒ©ã‚¹ç¾¤ã®ä¸€éƒ¨ï¼ˆIValue,DecimalValue,PlusValueï¼‰
+ * ‚½‚¾‚µAŒ»ó‚ÍˆÈ‰º‚ÌÀ‘•‚ªI‚í‚Á‚Ä‚¢‚Ü‚·B
+ * - ‹tƒ|[ƒ‰ƒ“ƒh‹L–@‚ğ•ª‰ğ‚µ‚ÄAŒvZ‚µ‚â‚·‚¢’lƒŠƒXƒg‚É•ÏŠ·‚·‚éˆ—‚Ìˆê•”iQ006.parseLinej
+ * - ŒvZ‚µ‚â‚·‚¢’l‚Æ‚µ‚ÄŠÇ—‚·‚é‚½‚ß‚ÌƒNƒ‰ƒXŒQ‚Ìˆê•”iIValue,DecimalValue,PlusValuej
  *
- * é€”ä¸­ã¾ã§çµ‚ã‚ã£ã¦ã„ã‚‹å®Ÿè£…ã‚’ä¸Šæ‰‹ãæµç”¨ã—ãªãŒã‚‰ã€æ®‹ã‚Šã®å‡¦ç†ã‚’å®Ÿè£…ã—ã¦ãã ã•ã„ã€‚
- * ã‚¨ãƒ©ãƒ¼å…¥åŠ›ã®ãƒã‚§ãƒƒã‚¯ã¯ä¸è¦ã§ã™ã€‚
+ * “r’†‚Ü‚ÅI‚í‚Á‚Ä‚¢‚éÀ‘•‚ğãè‚­—¬—p‚µ‚È‚ª‚çAc‚è‚Ìˆ—‚ğÀ‘•‚µ‚Ä‚­‚¾‚³‚¢B
+ * ƒGƒ‰[“ü—Í‚Ìƒ`ƒFƒbƒN‚Í•s—v‚Å‚·B
  *
- * å®Ÿè¡Œä¾‹ï¼š
+ * Às—áF
  *
- * å…¥åŠ›ï¼‰ 3 1.1 0.9 + 2.0 * -
- * å‡ºåŠ›ï¼‰ -1
- * ï¼ˆã¾ãŸã¯ -1.00 ãªã©ã€å°æ•°ç‚¹ã«0ãŒã¤ã„ã¦ã‚‚ã‚ˆã„ï¼‰
+ * “ü—Íj 3 1.1 0.9 + 2.0 * -
+ * o—Íj -1
+ * i‚Ü‚½‚Í -1.00 ‚È‚ÇA¬”“_‚É0‚ª‚Â‚¢‚Ä‚à‚æ‚¢j
  */
 public class Q006 {
+
+    public static void main(String[] args) {
+
+        // •W€“ü—Íˆ—
+        String lineText = getInputLine();
+        // ŒvZˆ—
+        BigDecimal result = calcRPN(lineText);
+        // Œ‹‰Êo—Í
+        System.out.println("o—Íj " + result);
+    }
+
+    /* •W€“ü—Íˆ—
+     * @return “ü—Í‚³‚ê‚½•¶š—ñi‰üs‚Ü‚Åj
+     */
+    private static String getInputLine() {
+        Scanner scan = new Scanner(System.in);
+        System.out.print("“ü—Íj ");
+        String line = scan.nextLine();
+        scan.close();
+        return line;
+    }
+
+    private static BigDecimal calcRPN(String lineText) {
+
+        // •ª‰ğ
+        List<IValue> parseList = parseLine(lineText);
+        Stack<BigDecimal> rpnStack = new Stack<>();
+//        for (IValue rpm : parseList) {
+//            rpm.execute(rpnStack);
+//        }
+        // ƒ‰ƒ€ƒ_®‚ÅÀ‘•
+        parseList.stream().forEach((que) -> que.execute(rpnStack));
+        return rpnStack.pop();
+    }
+
     /**
-     * é€†ãƒãƒ¼ãƒ©ãƒ³ãƒ‰ã§è¨˜è¼‰ã•ã‚ŒãŸ1è¡Œã®ãƒ†ã‚­ã‚¹ãƒˆã‚’åˆ†è§£ã™ã‚‹
-     * @param lineText 1è¡Œãƒ†ã‚­ã‚¹ãƒˆ
-     * @return åˆ†è§£ã•ã‚ŒãŸå€¤ãƒªã‚¹ãƒˆ
+     * ‹tƒ|[ƒ‰ƒ“ƒh‚Å‹LÚ‚³‚ê‚½1s‚ÌƒeƒLƒXƒg‚ğ•ª‰ğ‚·‚é
+     * @param lineText 1sƒeƒLƒXƒg
+     * @return •ª‰ğ‚³‚ê‚½’lƒŠƒXƒg
      */
     private static List<IValue> parseLine(String lineText) {
         List<IValue> resultList = new ArrayList<>();
-        // ç©ºç™½æ–‡å­—ã§åŒºåˆ‡ã£ã¦ãƒ«ãƒ¼ãƒ—ã™ã‚‹
+        // ‹ó”’•¶š‚Å‹æØ‚Á‚Äƒ‹[ƒv‚·‚é
         for (String text: lineText.split("[\\s]+")) {
-            // TODO ä¸€éƒ¨å‡¦ç†ã ã‘å®Ÿè£…
             switch (text) {
-                case "+":   // è¶³ã—ç®—
+                case "+":   // ‘«‚µZ
                     resultList.add(new PlusValue());
                     break;
-                default:    // ãã®ä»–ã¯æ•°å€¤ã¨ã—ã¦æ‰±ã†
+                case "-":   // ˆø‚«Z
+                    resultList.add(new SubtractValue());
+                    break;
+                case "*":   // Š|‚¯Z
+                    resultList.add(new MultiplyValue());
+                    break;
+                case "/":   // Š„‚èZ
+                    resultList.add(new DivideValue());
+                    break;
+                default:    // ‚»‚Ì‘¼‚Í”’l‚Æ‚µ‚Äˆµ‚¤
                     resultList.add(new DecimalValue(text));
                     break;
             }
@@ -51,4 +95,4 @@ public class Q006 {
         return resultList;
     }
 }
-// å®Œæˆã¾ã§ã®æ™‚é–“: xxæ™‚é–“ xxåˆ†
+// Š®¬‚Ü‚Å‚ÌŠÔ: 02ŠÔ 00•ª
